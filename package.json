@@ -10,13 +10,12 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "jade": "~1.11.0",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "pug": "2.0.0-beta11"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.4",
     "css-loader": "^5.0.1",
-    "dotenv": "^8.2.0",
     "postcss": "^8.2.4",
     "postcss-loader": "^5.0.0",
     "style-loader": "^2.0.0",
