@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "webpack": "webpack"
+    "webpack": "webpack --mode=development"
   },
   "dependencies": {
     "async": "^3.2.0",
