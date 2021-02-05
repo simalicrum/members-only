@@ -13,13 +13,13 @@ exports.message_list = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    console.log("message_list: ", message_list);
-    res.render("message_list", { message_list: message_list });
+    res.render("message_list", { message_list: message_list, user: req.user});
+    res.render("loggeout_nav", {});
   });
 }
 
 exports.message_create_get = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: Message create GET");
+  res.render("message_form", {"title": "Message Page"});
 }
 
 exports.message_create_post = function (req, res, next) {

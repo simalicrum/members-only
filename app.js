@@ -2,9 +2,13 @@ const dotenv = require("dotenv").config();
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const bcrypt = require("bcryptjs");
+const User = require("./models/user");
 
 //Set up mongoose connection
 var mongoose = require("mongoose");
@@ -13,10 +17,43 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
+// Login setup
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({ username: username }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          // passwords match! log user in
+          console.log("login worked");
+          return done(null, user)
+        } else {
+          // passwords do not match!
+          return done(null, false, { message: "Incorrect password" })
+        }
+      })
+    });
+  }
+));
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
+
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var loginRouter = require("./routes/login");
 var signupRouter = require("./routes/signup");
+var messageRouter = require("./routes/add-message")
 var compression = require("compression");
 var helmet = require("helmet");
 
@@ -33,11 +70,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(session({ secret: process.env.SECRET }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
+app.use("/add-message", messageRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
