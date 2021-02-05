@@ -2,9 +2,20 @@ const async = require("async");
 const { body, validationResult } = require("express-validator");
 
 const Message = require("../models/message");
+const User = require("../models/user");
 
 exports.message_detail = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: Message detail");
+  res.send("NOT IMPLEMENTED: Message detail GET");
+}
+
+exports.message_list = function (req, res, next) {
+  Message.find().populate("author").exec(function (err, message_list) {
+    if (err) {
+      return next(err);
+    }
+    console.log("message_list: ", message_list);
+    res.render("message_list", { message_list: message_list });
+  });
 }
 
 exports.message_create_get = function (req, res, next) {

@@ -4,7 +4,7 @@ const { body, validationResult } = require("express-validator");
 const User = require("../models/user");
 
 exports.user_login_get = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: User login GET");
+  res.render("login_form", {"title": "Login Page"});
 }
 
 exports.user_login_post = function (req, res, next) {
@@ -12,7 +12,7 @@ exports.user_login_post = function (req, res, next) {
 }
 
 exports.user_signup_get = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: User signup GET");
+  res.render("signup_form", {"title": "Signup Page"});
 }
 
 exports.user_signup_post = function (req, res, next) {

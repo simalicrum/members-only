@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  div.container.max-w-screen-md.mx-auto
+    header.border-b.py-4.px-8.flex.items-center.space.justify-between
+      div.text-xl.text-gray-800.font-bold Members Only
+      div.text-sm.text-gray-500
+        a(href="/login") Login
+        a.ml-8(href="/signup") Signup
+    a.bg-gray-400.text-white.text-center.rounded-md.m-8.block(href="#" class="py-2.5") Add a message
+
+    div
+      ul.p-8
+        each message in message_list
+          li.space-y-2
+            h2.text-lg.font-semibold #{message.title}
+            p.text-sm.text-gray-500 #{message.content}
+            p.text-sm.text-gray-800 #{message.author.first_name} #{message.author.last_name} 
+              span.text-gray-500 • #{message.timestamp_formatted}
