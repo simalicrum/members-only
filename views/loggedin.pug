@@ -5,8 +5,8 @@ block content
     header.border-b.py-4.px-8.flex.items-center.space.justify-between
       div.text-xl.text-gray-800.font-bold Members Only
       div.text-sm.text-gray-500
-        a(href="/login") Login
-        a.ml-8(href="/signup") Signup
+        a(href="/logout") Logout
+        a.ml-8(href="#") #{user.username}
     a.bg-gray-400.text-white.text-center.rounded-md.m-8.block.flex.items-center.justify-center(href="/add-message" class="py-2.5")
       svg.inline(height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor")
         path(fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd")

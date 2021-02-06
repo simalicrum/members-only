@@ -15,6 +15,11 @@ passport.authenticate('local', {
     failureRedirect: '/login',
 }));
 
+exports.user_logout_get = function (req, res) {
+  req.logout();
+  res.redirect("/");
+}
+
 exports.user_signup_get = function (req, res, next) {
   res.render("signup_form", {"title": "Create an account"});
 }
@@ -59,8 +64,6 @@ exports.user_signup_post = [
         });
       }
     });
-    
-    
   }
 ]
 

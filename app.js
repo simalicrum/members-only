@@ -52,6 +52,7 @@ passport.deserializeUser(function (id, done) {
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var loginRouter = require("./routes/login");
+var logoutRouter = require("./routes/logout");
 var signupRouter = require("./routes/signup");
 var messageRouter = require("./routes/add-message")
 var compression = require("compression");
@@ -77,6 +78,7 @@ app.use(passport.session());
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/login", loginRouter);
+app.use("/logout", logoutRouter);
 app.use("/signup", signupRouter);
 app.use("/add-message", messageRouter);
 

@@ -13,8 +13,11 @@ exports.message_list = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.render("message_list", { message_list: message_list, user: req.user});
-    res.render("loggeout_nav", {});
+    if (req.user) {
+      res.render("loggedin", { message_list: message_list, user: req.user});
+    } else {
+      res.render("loggedout", { message_list: message_list});
+    }
   });
 }
 
@@ -22,9 +25,41 @@ exports.message_create_get = function (req, res, next) {
   res.render("message_form", {"title": "Message Page"});
 }
 
-exports.message_create_post = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: Message create POST");
-}
+exports.message_create_post = [
+  body("title", "Title must not be empty.").trim().isLength({ min: 1 }).escape(),
+  body("message", "Message cannot be blank.").trim().isLength({ min: 1}).escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+      const message = new Message({
+        title: req.body.title,
+        author: req.user._id,
+        timestamp: new Date(),
+        content: req.body.message,
+      });
+      if (!errors.isEmpty()) {
+        async.parallel(
+          function (err, results) {
+            if (err) {
+              return next(err);
+            }
+            res.render("message_form", {
+              message: message,
+              title: "Add a message",
+            });
+          }
+        );
+        return;
+      } else {
+        message.save(function (err) {
+          if (err) {
+            return next(err);
+          }
+          res.redirect("/");
+        });
+      }
+
+  }
+]
 
 exports.message_update_get = function (req, res, next) {
   res.send("NOT IMPLEMENTED: Message update GET");
