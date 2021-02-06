@@ -55,6 +55,7 @@ var loginRouter = require("./routes/login");
 var logoutRouter = require("./routes/logout");
 var signupRouter = require("./routes/signup");
 var messageRouter = require("./routes/add-message")
+var joinRouter = require("./routes/join");
 var compression = require("compression");
 var helmet = require("helmet");
 
@@ -81,6 +82,7 @@ app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/signup", signupRouter);
 app.use("/add-message", messageRouter);
+app.use("/join", joinRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

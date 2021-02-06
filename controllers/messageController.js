@@ -14,7 +14,11 @@ exports.message_list = function (req, res, next) {
       return next(err);
     }
     if (req.user) {
-      res.render("loggedin", { message_list: message_list, user: req.user});
+      if (req.user.status === "member") {
+        res.render("member", { message_list: message_list, user: req.user});
+      } else {
+        res.render("user", { message_list: message_list, user: req.user});
+      }
     } else {
       res.render("loggedout", { message_list: message_list});
     }
@@ -26,28 +30,24 @@ exports.message_create_get = function (req, res, next) {
 }
 
 exports.message_create_post = [
-  body("title", "Title must not be empty.").trim().isLength({ min: 1 }).escape(),
-  body("message", "Message cannot be blank.").trim().isLength({ min: 1}).escape(),
+  body("title", "Title cannot be blank").trim().isLength({ min: 1 }).escape(),
+  body("message", "Message cannot be blank").trim().isLength({ min: 1}).escape(),
   (req, res, next) => {
     const errors = validationResult(req);
+    console.log("errors: ", errors);
       const message = new Message({
         title: req.body.title,
         author: req.user._id,
         timestamp: new Date(),
         content: req.body.message,
+        errors: errors,
       });
       if (!errors.isEmpty()) {
-        async.parallel(
-          function (err, results) {
-            if (err) {
-              return next(err);
-            }
             res.render("message_form", {
               message: message,
               title: "Add a message",
+              errors: errors.array(),
             });
-          }
-        );
         return;
       } else {
         message.save(function (err) {

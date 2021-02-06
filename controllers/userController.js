@@ -25,10 +25,10 @@ exports.user_signup_get = function (req, res, next) {
 }
 
 exports.user_signup_post = [
-  body("firstname", "First name must not be empty.").trim().isLength({ min: 1 }).escape(),
-  body("lastname", "Last name must not be empty.").trim().isLength({ min: 1}).escape(),
-  body("username", "Username must not be empty.").trim().isLength({ min: 1}).escape(),
-  body("password", "Password must not be empty.").trim().isLength({ min: 1}).escape(),
+  body("firstname", "First name cannot be blank").trim().isLength({ min: 1 }).escape(),
+  body("lastname", "Last name cannot be blank").trim().isLength({ min: 1}).escape(),
+  body("username", "Username cannot be blank").trim().isLength({ min: 1}).escape(),
+  body("password", "Password cannot be blank").trim().isLength({ min: 1}).escape(),
   (req, res, next) => {
     const errors = validationResult(req);
     bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
@@ -40,20 +40,15 @@ exports.user_signup_post = [
         last_name: req.body.lastname,
         username: req.body.username,
         password: hashedPassword,
-        status: "admin"
+        status: "user"
       });
       if (!errors.isEmpty()) {
-        async.parallel(
-          function (err, results) {
-            if (err) {
-              return next(err);
-            }
+        console.log("errors: ", errors.array());
             res.render("signup_form", {
               user: user,
               title: "Create an account",
+              errors: errors.array(),
             });
-          }
-        );
         return;
       } else {
         user.save(function (err) {
@@ -82,3 +77,27 @@ exports.user_delete_get = function (req, res, next) {
 exports.user_delete_post = function (req, res, next) {
   res.send("NOT IMPLEMENTED: User update POST");
 }
+
+exports.user_join_get = function (req, res, next) {
+  res.render("join_form", {"title": "Join the club"});
+}
+
+exports.user_join_post = [
+  body("secretword", "You must enter the secret word correctly!").trim().matches("cats"),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.render("join_form", {
+          title: "Join the club",
+          errors: errors.array(),
+        });
+    return;
+  } else {
+    User.findById(req.user._id).updateOne( {status: "member"} ,function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect("/");
+    });
+  }}
+]
