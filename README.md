@@ -2,7 +2,7 @@
 
 A private/anonymous message board using [Express](http://expressjs.com/) on [NodeJS](https://nodejs.org/).
 
-Live server: TBD
+Live server: [https://frozen-hollows-93970.herokuapp.com/](https://frozen-hollows-93970.herokuapp.com/)
 
 Users can join the club by entering the secret word: cats
 
