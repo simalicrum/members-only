@@ -82,9 +82,14 @@ exports.message_update_post = function (req, res, next) {
 };
 
 exports.message_delete_get = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: Message update GET");
+  res.send("NOT IMPLEMENTED: Message delete GET");
 };
 
 exports.message_delete_post = function (req, res, next) {
-  res.send("NOT IMPLEMENTED: Message update POST");
+  Message.findByIdAndRemove(req.body.messageid, function deleteItem(err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
 };

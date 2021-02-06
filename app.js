@@ -18,26 +18,28 @@ var db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // Login setup
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
+passport.use(
+  new LocalStrategy(function (username, password, done) {
+    User.findOne({ username: username }, function (err, user) {
+      if (err) {
+        return done(err);
+      }
       if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+        return done(null, false, { message: "Incorrect username." });
       }
       bcrypt.compare(password, user.password, (err, res) => {
         if (res) {
           // passwords match! log user in
           console.log("login worked");
-          return done(null, user)
+          return done(null, user);
         } else {
           // passwords do not match!
-          return done(null, false, { message: "Incorrect password" })
+          return done(null, false, { message: "Incorrect password" });
         }
-      })
+      });
     });
-  }
-));
+  })
+);
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -54,7 +56,7 @@ var usersRouter = require("./routes/users");
 var loginRouter = require("./routes/login");
 var logoutRouter = require("./routes/logout");
 var signupRouter = require("./routes/signup");
-var messageRouter = require("./routes/add-message")
+var messageRouter = require("./routes/add-message");
 var joinRouter = require("./routes/join");
 var compression = require("compression");
 var helmet = require("helmet");
@@ -82,7 +84,7 @@ app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/signup", signupRouter);
 app.use("/add-message", messageRouter);
-app.use("/join", joinRouter)
+app.use("/join", joinRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
