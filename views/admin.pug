@@ -21,4 +21,5 @@ block content
             h2.text-lg.font-semibold #{message.title}
             p.text-sm.text-gray-500 #{message.content}
             p.text-sm.text-gray-800 #{message.author.first_name} #{message.author.last_name} 
-              span.text-gray-500 • #{message.timestamp_formatted}
+              span.text-gray-500 • #{message.timestamp_formatted} • 
+              a.text-red-700(href="#") delete message
